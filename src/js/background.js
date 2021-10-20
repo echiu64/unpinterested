@@ -34,7 +34,7 @@ chrome.runtime.setUninstallURL('https://docs.google.com/forms/d/1faYdMUgZC_fstuO
 
 
 function unExcludeResults(requestDetails) {
-    let redirectUrl = requestDetails.url.replace(exclusionRegexString, '');    
+    let redirectUrl = requestDetails.url.replace(exclusionRegexString, '');
     if (requestDetails.url !== redirectUrl) {
         return {redirectUrl};
     }
@@ -107,26 +107,24 @@ function initialize() {
 
         chrome.webRequest.onBeforeRequest.addListener(
             (details) => {
-
                 const host = URL(details.url).host;
 
-                if (!/^([a-zA-Z\d-]+\.){0,}google\.([a-z\.])+$/.test(host)) {
+                if (!/^([a-zA-Z\d-]+\.){0,}google\.([a-z\.])+$/.test(host)) 
                     return;
-                }
-                
-                if (/google\.[a-zA-Z]+(\.[a-zA-Z]+)?\/maps/.test(details.url)){
+
+                if (/google\.[a-zA-Z]+(\.[a-zA-Z]+)?\/maps/.test(details.url)) 
                     return unExcludeResults(details);
-                }
                 
-                if (isDisabled) {
+                if (isDisabled) 
                     return unExcludeResults(details);
-                }
 
                 let {fullQueryString} = getParsedUrl(details.url);
 
-                if (!enableForAllSearches && fullQueryString.tbm !== "isch") {
+                if(fullQueryString.tbm === 'map') 
+                    return unExcludeResults()
+
+                if (!enableForAllSearches && fullQueryString.tbm !== "isch") 
                     return unExcludeResults(details);
-                }
 
                 return modifyRequestToExcludeResults(details);
 
